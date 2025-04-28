@@ -7,8 +7,9 @@ from preprocess import Datasets
 #change this to actual model
 model = tf.keras.models.load_model() #insert .h5 file in parens
 
-#unsure what to put for path
-datasets = Datasets(, 1)
+#unsure what to put for path (but I know it should be like the data directory 
+# bc the preprocess Datasets code uses it that way I'm j not sure if its formatted corretcly)
+datasets = Datasets("/data", 1)
 
 #helper method to preprocess images in the same way we did for training
 def preprocess_frame(img):
@@ -26,6 +27,7 @@ while live_feed.isOpened():
 
     frame_im = preprocess_frame(frame_im)
 
+    #Unsure what this will output it is a tensorflow method
     predictions = model.predict(frame_im)
     print("this is the prediction of the model:" + predictions)
 
