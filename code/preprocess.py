@@ -210,12 +210,12 @@ class Datasets():
 
             data_gen = tf.keras.preprocessing.image.ImageDataGenerator(
                 preprocessing_function=self.preprocess_fn,
-                rotation_range=5, # likely by degrees, can be much larger than .1 (could be like 3)
-                width_shift_range=0.15,
-                height_shift_range=0.15,
-                zoom_range=0.2, # some things like zoom may matter more, decr range
-                shear_range=0.2,
-                channel_shift_range=40 # some things like color may matter less, incr
+                #rotation_range=5, # likely by degrees, can be much larger than .1 (could be like 3)
+                #width_shift_range=0.15,
+                #height_shift_range=0.15,
+                #zoom_range=0.2, # some things like zoom may matter more, decr range
+                #shear_range=0.2,
+                #channel_shift_range=40 # some things like color may matter less, incr
             )
 
             # ============================================================

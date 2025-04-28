@@ -1,1 +1,6 @@
 data/*
+/code/checkpoints/your_model
+/code/logs/your_model
+/code/misclassified/your_model
+__pycache__
+
