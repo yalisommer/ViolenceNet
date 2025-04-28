@@ -1,0 +1,12 @@
+UNORDERED (Mostly)
+- Trim unnecessary files/depedancies
+- Fix model architecture
+- ^^ Fine tune, but mostly change it from being ~7mil params to something more like sub 1mil
+- Expand on init idea
+- Prettify README
+- Figure out preprocessing -> they seem to already be preprocessing, should we try a run without it?
+
+
+Name Ideas:
+- ViolenceNet
+- 
