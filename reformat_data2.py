@@ -5,9 +5,9 @@ import shutil
 move_dirs = ['test', 'train', 'valid']
 
 for dir in move_dirs:
-    source_folder = f'data/{dir}'
-    v_folder = f'data/{dir}/V'
-    nv_folder = f'data/{dir}/NV'
+    source_folder = f'data2/{dir}'
+    v_folder = f'data2/{dir}/V'
+    nv_folder = f'data2/{dir}/NV'
 
     os.makedirs(v_folder, exist_ok=True)
     os.makedirs(nv_folder, exist_ok=True)
