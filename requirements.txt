@@ -9,3 +9,6 @@ numpy==1.26.4
 opencv-contrib-python==4.6.0.66
 protobuf==4.25.6
 tensorflow==2.17.0
+lime
+scikit-learn
+skimage
