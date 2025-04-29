@@ -3,4 +3,5 @@ data/*
 /code/logs/your_model
 /code/misclassified/your_model
 __pycache__
-
+__pycache__/
+*.pyc
