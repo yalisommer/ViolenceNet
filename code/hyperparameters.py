@@ -17,7 +17,7 @@ succeeds or fails. The value for this depends significantly on which
 optimizer is used. Refer to the default learning rate parameter
 """
 #changing this
-learning_rate = 1e-4 # was 1e-4
+learning_rate = 1e-3 # was 1e-4
 
 """
 Momentum on the gradient (if you use a momentum-based optimizer)

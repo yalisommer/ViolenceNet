@@ -6,7 +6,7 @@ Brown University
 
 import tensorflow as tf
 from keras.layers import \
-       Conv2D, MaxPool2D, Dropout, Flatten, Dense
+       Conv2D, MaxPool2D, Dropout, Flatten, Dense, BatchNormalization
 
 from keras.regularizers import l2
 import hyperparameters as hp
@@ -84,18 +84,37 @@ class YourModel(tf.keras.Model):
               # # probably overfitting -> 2 dense and one conv
 
               #Yali's most successful model (~90.3% accuracy) but with Dropout 0.3->0.5/my second run:
+              # Conv2D(32, 3, 1, activation='relu', padding='same'),
+              # Conv2D(32, 3, 1, activation='relu', padding='same'),
+              # MaxPool2D(2),
+
+              # Conv2D(64, 3, 1, activation='relu', padding='same'),
+              # Conv2D(64, 3, 1, activation='relu', padding='same'),
+              # MaxPool2D(2),
+
+              # Flatten(),
+              # Dense(128, activation='relu'),
+              # Dropout(0.3),
+              # Dense(2, activation='softmax')
+
+              #Yali's most successful model (~90.3% accuracy) but with Dropout 0.4, and batch normalization:
               Conv2D(32, 3, 1, activation='relu', padding='same'),
+              BatchNormalization(),
               Conv2D(32, 3, 1, activation='relu', padding='same'),
+              BatchNormalization(),
               MaxPool2D(2),
 
               Conv2D(64, 3, 1, activation='relu', padding='same'),
+              BatchNormalization(),
               Conv2D(64, 3, 1, activation='relu', padding='same'),
+              BatchNormalization(),
               MaxPool2D(2),
 
               Flatten(),
               Dense(128, activation='relu'),
-              Dropout(0.3),
+              Dropout(0.4),
               Dense(2, activation='softmax')
+
 
         ]
 
