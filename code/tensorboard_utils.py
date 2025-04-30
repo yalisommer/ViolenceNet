@@ -226,11 +226,12 @@ class CustomModelSaver(tf.keras.callbacks.Callback):
 
             if self.task == '1' or self.task == '2':
                 save_location = self.checkpoint_dir + os.sep + "your." + save_name
+                model_save_location = save_location + ".keras"
                 print(("\nEpoch {0:03d} TEST accuracy ({1:.4f}) EXCEEDED previous "
                        "maximum TEST accuracy.\nSaving checkpoint at {location}")
                        .format(epoch + 1, cur_acc, location = save_location))
                 self.model.save_weights(save_location)
-                self.model.save(save_location) # RIGHT NOW SAVING BOTH, THIS IS AN EXPENSIVE COMPUTATION, WE SHOULD CHANGE IN FUTURE
+                self.model.save(model_save_location) # RIGHT NOW SAVING BOTH, THIS IS AN EXPENSIVE COMPUTATION, WE SHOULD CHANGE IN FUTURE
             elif self.task == '3':
                 save_location = self.checkpoint_dir + os.sep + "vgg." + save_name
                 print(("\nEpoch {0:03d} TEST accuracy ({1:.4f}) EXCEEDED previous "
