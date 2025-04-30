@@ -97,7 +97,25 @@ class YourModel(tf.keras.Model):
               # Dropout(0.3),
               # Dense(2, activation='softmax')
 
-              #Yali's most successful model (~90.3% accuracy) but with Dropout 0.4, and batch normalization:
+              #Yali's most successful model (~90.3% accuracy) but with Dropout 0.4, and batch normalization --> achieved ~91%:
+              # Conv2D(32, 3, 1, activation='relu', padding='same'),
+              # BatchNormalization(),
+              # Conv2D(32, 3, 1, activation='relu', padding='same'),
+              # BatchNormalization(),
+              # MaxPool2D(2),
+
+              # Conv2D(64, 3, 1, activation='relu', padding='same'),
+              # BatchNormalization(),
+              # Conv2D(64, 3, 1, activation='relu', padding='same'),
+              # BatchNormalization(),
+              # MaxPool2D(2),
+
+              # Flatten(),
+              # Dense(128, activation='relu'),
+              # Dropout(0.4),
+              # Dense(2, activation='softmax')
+
+              #Trying above but with fewer neurons:
               Conv2D(32, 3, 1, activation='relu', padding='same'),
               BatchNormalization(),
               Conv2D(32, 3, 1, activation='relu', padding='same'),
@@ -111,10 +129,9 @@ class YourModel(tf.keras.Model):
               MaxPool2D(2),
 
               Flatten(),
-              Dense(128, activation='relu'),
+              Dense(86, activation='relu'),
               Dropout(0.4),
               Dense(2, activation='softmax')
-
 
         ]
 
