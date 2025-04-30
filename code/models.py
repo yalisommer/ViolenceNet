@@ -8,6 +8,7 @@ import tensorflow as tf
 from keras.layers import \
        Conv2D, MaxPool2D, Dropout, Flatten, Dense
 
+from keras.regularizers import l2
 import hyperparameters as hp
 
 from keras import config
