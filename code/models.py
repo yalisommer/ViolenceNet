@@ -65,28 +65,38 @@ class YourModel(tf.keras.Model):
         
         # One conv layer with an activation function, a max pooling layer, a dense layer with an activation function,
         # a final dense layer with the number of classes as the number of neurons, and a softmax activation to produce a probability distribution.
-        self.architecture = [
-              ## Add layers here separated by commas.
+        input_shape = (224, 224, 3)
+        base_input = tf.keras.layers.Input(shape=input_shape)
+        resnet_base = tf.keras.applications.ResNet50(weights='imagenet', include_top=False, input_tensor=base_input)
+        x = resnet_base.output
+        x = tf.keras.layers.GlobalAveragePooling2D()(x)  # Converts (7, 7, 2048) to (2048,)
+        x = Dense(128, activation='relu')(x)
+        x = Dropout(0.5)(x)
+        output = Dense(2, activation='softmax')(x)
 
-              #idea: have two conv before pool, change size to be smaller than 7
-              Conv2D(15, 7, 1, activation='relu'), # 10 conv kernals each size 5x5 with stride 1
-              MaxPool2D(2), # should I be naming these? 2 here means that the size of the downscaled pool is 2x2
-              Conv2D(10, 5, 1, activation='relu'),
-              MaxPool2D(2),
-              Flatten(),
-              Dense(16, activation='relu'), # was 32
-              Dropout(.5),
-              Dense(16, activation='relu'), # was 32
-              Dropout(.5),
-              Dense(2, activation='softmax')
-              # probably overfitting -> 2 dense and one conv
-        ]
+        self.your_model = tf.keras.models.Model(inputs=base_input, outputs=output)
+       #  self.architecture = [
+       #        ## Add layers here separated by commas.
+
+       #        #idea: have two conv before pool, change size to be smaller than 7
+       #        Conv2D(15, 7, 1, activation='relu'), # 10 conv kernals each size 5x5 with stride 1
+       #        MaxPool2D(2), # should I be naming these? 2 here means that the size of the downscaled pool is 2x2
+       #        Conv2D(10, 5, 1, activation='relu'),
+       #        MaxPool2D(2),
+       #        Flatten(),
+       #        Dense(16, activation='relu'), # was 32
+       #        Dropout(.5),
+       #        Dense(16, activation='relu'), # was 32
+       #        Dropout(.5),
+       #        Dense(2, activation='softmax')
+       #        # probably overfitting -> 2 dense and one conv
+       #  ]
 
         #       Don't change the line below. This line creates an instance
         #       of a Sequential model using the layers you defined above. 
         #       A sequential model, when called, calls its own layers in 
         #       order to produce its output! 
-        self.your_model = tf.keras.Sequential(self.architecture, name="your_model")
+       #  self.your_model = tf.keras.Sequential(self.architecture, name="your_model")
 
     def call(self, x):
         """ Passes input image through the network. """
