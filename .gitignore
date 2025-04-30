@@ -1,5 +1,6 @@
 data/*
 /code/checkpoints/your_model
+/code/checkpoints/oscar_models
 /code/logs/your_model
 /code/misclassified/your_model
 __pycache__
