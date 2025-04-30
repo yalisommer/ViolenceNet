@@ -16,7 +16,8 @@ A critical parameter that can dramatically affect whether training
 succeeds or fails. The value for this depends significantly on which
 optimizer is used. Refer to the default learning rate parameter
 """
-learning_rate = 1e-3 # was 1e-4
+#changing this
+learning_rate = 1e-4 # was 1e-4
 
 """
 Momentum on the gradient (if you use a momentum-based optimizer)
