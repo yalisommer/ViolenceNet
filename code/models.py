@@ -68,18 +68,18 @@ class YourModel(tf.keras.Model):
         self.architecture = [
               ## Add layers here separated by commas.
 
-              #idea: have two conv before pool, change size to be smaller than 7
-              Conv2D(15, 7, 1, activation='relu'), # 10 conv kernals each size 5x5 with stride 1
-              MaxPool2D(2), # should I be naming these? 2 here means that the size of the downscaled pool is 2x2
-              Conv2D(10, 5, 1, activation='relu'),
+              Conv2D(32, 3, 1, activation='relu', padding='same'),
+              Conv2D(32, 3, 1, activation='relu', padding='same'),
               MaxPool2D(2),
+
+              Conv2D(64, 3, 1, activation='relu', padding='same'),
+              Conv2D(64, 3, 1, activation='relu', padding='same'),
+              MaxPool2D(2),
+
               Flatten(),
-              Dense(16, activation='relu'), # was 32
-              Dropout(.5),
-              Dense(16, activation='relu'), # was 32
-              Dropout(.5),
+              Dense(128, activation='relu'),
+              Dropout(0.3),
               Dense(2, activation='softmax')
-              # probably overfitting -> 2 dense and one conv
         ]
 
         #       Don't change the line below. This line creates an instance

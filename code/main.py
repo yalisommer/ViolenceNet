@@ -15,6 +15,7 @@ import hyperparameters as hp
 from models import YourModel, VGGModel
 from preprocess import Datasets
 from skimage.transform import resize
+from tensorflow.keras.callbacks import ReduceLROnPlateau
 from tensorboard_utils import \
         ImageLabelingLogger, ConfusionMatrixLogger, CustomModelSaver
 
@@ -148,6 +149,14 @@ def LIME_explainer(model, path, preprocess_fn, timestamp):
 def train(model, datasets, checkpoint_path, logs_path, init_epoch):
     """ Training routine. """
 
+    lr_scheduler = ReduceLROnPlateau(
+        monitor='val_loss',       # Metric to monitor
+        factor=0.5,               # Factor to reduce the learning rate
+        patience=5,               # Number of epochs with no improvement after which learning rate will be reduced
+        min_lr=1e-6,              # Lower bound on the learning rate
+        verbose=1                 # Verbosity mode
+    )
+
     # Keras callbacks for training
     callback_list = [
         tf.keras.callbacks.TensorBoard(
@@ -155,12 +164,14 @@ def train(model, datasets, checkpoint_path, logs_path, init_epoch):
             update_freq='batch',
             profile_batch=0),
         ImageLabelingLogger(logs_path, datasets),
-        CustomModelSaver(checkpoint_path, ARGS.task, hp.max_num_weights)
+        CustomModelSaver(checkpoint_path, ARGS.task, hp.max_num_weights),
+        lr_scheduler
     ]
 
     # Include confusion logger in callbacks if flag set
     if ARGS.confusion:
         callback_list.append(ConfusionMatrixLogger(logs_path, datasets))
+
 
     # Begin training
     model.fit(
