@@ -69,9 +69,9 @@ class YourModel(tf.keras.Model):
               ## Add layers here separated by commas.
 
               #idea: have two conv before pool, change size to be smaller than 7
-              Conv2D(15, 7, 1, activation='relu'), # 10 conv kernals each size 5x5 with stride 1
+              Conv2D(15, 7, 1, activation='relu', kernel_regularizer=l2(0.001)), # 10 conv kernals each size 5x5 with stride 1
               MaxPool2D(2), # should I be naming these? 2 here means that the size of the downscaled pool is 2x2
-              Conv2D(10, 5, 1, activation='relu'),
+              Conv2D(10, 5, 1, activation='relu', kernel_regularizer=l2(0.001)),
               MaxPool2D(2),
               Flatten(),
               Dense(16, activation='relu'), # was 32
