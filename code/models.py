@@ -115,7 +115,7 @@ class YourModel(tf.keras.Model):
               # Dropout(0.4),
               # Dense(2, activation='softmax')
 
-              #Trying above but with fewer neurons:
+              #Trying above but with fewer neurons: (86 neurons got to 91.5%, 64 did worse)
               Conv2D(32, 3, 1, activation='relu', padding='same'),
               BatchNormalization(),
               Conv2D(32, 3, 1, activation='relu', padding='same'),
@@ -129,7 +129,7 @@ class YourModel(tf.keras.Model):
               MaxPool2D(2),
 
               Flatten(),
-              Dense(64, activation='relu'),
+              Dense(86, activation='relu'),
               Dropout(0.4),
               Dense(2, activation='softmax')
 

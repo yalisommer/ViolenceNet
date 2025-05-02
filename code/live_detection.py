@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential
 from keras.layers import \
-       Conv2D, MaxPool2D, Dropout, Flatten, Dense
+       Conv2D, MaxPool2D, Dropout, Flatten, Dense, BatchNormalization
 from preprocess import Datasets
 from skimage.transform import resize
 # import argparse
@@ -23,21 +23,38 @@ from skimage.transform import resize
 model = Sequential([
               ## Add layers here separated by commas.
 
-              #idea: have two conv before pool, change size to be smaller than 7
-              Conv2D(15, kernel_size=7, strides=1, activation='relu'), # 10 conv kernals each size 5x5 with stride 1
-              MaxPool2D(2), # should I be naming these? 2 here means that the size of the downscaled pool is 2x2
-              Dense(64, activation='relu'), # was 32
-              Dropout(0.5),
-              Flatten(),
-              Dense(2, activation='softmax')
-              # probably overfitting -> 2 dense and one conv
+            #   #idea: have two conv before pool, change size to be smaller than 7
+            #   Conv2D(15, kernel_size=7, strides=1, activation='relu'), # 10 conv kernals each size 5x5 with stride 1
+            #   MaxPool2D(2), # should I be naming these? 2 here means that the size of the downscaled pool is 2x2
+            #   Dense(64, activation='relu'), # was 32
+            #   Dropout(0.5),
+            #   Flatten(),
+            #   Dense(2, activation='softmax')
+            #   # probably overfitting -> 2 dense and one conv
+
+            Conv2D(32, 3, 1, activation='relu', padding='same'),
+            BatchNormalization(),
+            Conv2D(32, 3, 1, activation='relu', padding='same'),
+            BatchNormalization(),
+            MaxPool2D(2),
+
+            Conv2D(64, 3, 1, activation='relu', padding='same'),
+            BatchNormalization(),
+            Conv2D(64, 3, 1, activation='relu', padding='same'),
+            BatchNormalization(),
+            MaxPool2D(2),
+
+            Flatten(),
+            Dense(86, activation='relu'),
+            Dropout(0.4),
+            Dense(2, activation='softmax')
         ])
 model.build()
-model.load_weights("/Users/yalisommer/Desktop/Schoolwork/CS/CS1430/ViolenceNet-Darpli/code/checkpoints/your_model/042825-151251/your.e048-acc0.8863.weights.h5") #insert .h5 file in parens
+model.load_weights("checkpoints/your_model/your.e016-acc0.9152.weights.h5") #insert .h5 file in parens
 
 #unsure what to put for path (but I know it should be like the data directory 
 # bc the preprocess Datasets code uses it that way I'm j not sure if its formatted corretcly)
-datasets = Datasets("/Users/yalisommer/Desktop/Schoolwork/CS/CS1430/ViolenceNet-Darpli/data", 1)
+datasets = Datasets("../data", 1)
 
 #helper method to preprocess images in the same way we did for training
 def preprocess_frame(img):
@@ -69,13 +86,13 @@ while live_feed.isOpened():
     print(violence_prob)
 
     color = (0, 0, 0)
-    if violence_prob > 0.55:
+    if violence_prob > 0.49:
         label = "VIOLENCE DETECTED"
         color = (0, 0, 255)
     else:
         label = ""
 
-    cv2.putText(display_frame, label, (400, 800), cv2.FONT_HERSHEY_PLAIN, 8, color, 4)
+    cv2.putText(display_frame, label, (200, 400), cv2.FONT_HERSHEY_PLAIN, 8, color, 4)
     cv2.imshow("Live Detection", display_frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
