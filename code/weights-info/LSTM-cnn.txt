@@ -1,0 +1,62 @@
+MobileNet + LSTM model, achieved 93.5%
+
+In google drive: MoBiLSTM_model_augmented.h5
+
+from keras.applications.mobilenet_v2 import MobileNetV2
+
+mobilenet = MobileNetV2( include_top=False , weights="imagenet")
+
+#Fine-Tuning to make the last 40 layer trainable
+mobilenet.trainable=True
+
+for layer in mobilenet.layers[:-40]:
+  layer.trainable=False
+
+
+def create_model():
+
+    model = Sequential()
+
+    ########################################################################################################################
+
+    #Specifying Input to match features shape
+    model.add(Input(shape = (SEQUENCE_LENGTH, IMAGE_HEIGHT, IMAGE_WIDTH, 3)))
+
+    # Passing mobilenet in the TimeDistributed layer to handle the sequence
+    model.add(TimeDistributed(mobilenet))
+
+    model.add(Dropout(0.25))
+
+    model.add(TimeDistributed(Flatten()))
+
+
+    lstm_fw = LSTM(units=32)
+    lstm_bw = LSTM(units=32, go_backwards = True)
+
+    model.add(Bidirectional(lstm_fw, backward_layer = lstm_bw))
+
+    model.add(Dropout(0.25))
+
+    model.add(Dense(256,activation='relu'))
+    model.add(Dropout(0.25))
+
+    model.add(Dense(128,activation='relu'))
+    model.add(Dropout(0.25))
+
+    model.add(Dense(64,activation='relu'))
+    model.add(Dropout(0.25))
+
+    model.add(Dense(32,activation='relu'))
+    model.add(Dropout(0.25))
+
+
+    model.add(Dense(len(CLASSES_LIST), activation = 'softmax'))
+
+    ########################################################################################################################
+
+    model.summary()
+
+    return model
+
+    # Constructing the Model
+    MoBiLSTM_model = create_model()
