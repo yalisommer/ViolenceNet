@@ -1,0 +1,2 @@
+command to run yolo:
+python yolo_detect.py --model my_model2.pt --source usb0 --resolution 1280x720
