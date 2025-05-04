@@ -9,7 +9,7 @@ from keras.models import load_model
 SEQUENCE_LENGTH = 16  # Set according to how your model was trained
 IMAGE_HEIGHT, IMAGE_WIDTH = 64, 64  # Match your model input shape
 CLASSES_LIST = ["NonViolence", "Violence"]  # Replace with your actual class names
-MODEL_PATH = 'model_3dcnn.h5'  # Path to your saved .h5 model
+MODEL_PATH = 'model_3dcnn9394.h5'  # Path to your saved .h5 model
 
 # === Load the trained model ===
 MoBiLSTM_model = load_model(MODEL_PATH)
