@@ -21,9 +21,12 @@ video_reader = cv2.VideoCapture(0)
 frames_queue = deque(maxlen=SEQUENCE_LENGTH)
 
 predicted_class_name = ''
+previous_prediction = ''
 
 nonviolence_confidence = 0
 violence_confidence = 0
+frame_count = 0
+
 
 while True:
     ok, frame = video_reader.read()
@@ -31,6 +34,8 @@ while True:
     if not ok:
         break
 
+    frame_count += 1
+    
     # Resize and normalize the frame
     resized_frame = cv2.resize(frame, (IMAGE_HEIGHT, IMAGE_WIDTH))
     normalized_frame = resized_frame / 255.0
@@ -46,11 +51,21 @@ while True:
         violence_confidence = predicted_probs[1]
         print(predicted_probs)
 
-        #THRESHOLDING
-        if nonviolence_confidence < .85:
-            predicted_class_name = "Violence"
+        #THRESHOLDING + has to be two frames in a row 
+        if frame_count < 2:
+            if nonviolence_confidence < .80:
+                predicted_class_name = "Violence"
+                previous_prediction = "Violence"
+            else:
+                predicted_class_name = "NonViolence"
+                previous_prediction = "NonViolence"
         else:
-            predicted_class_name = "NonViolence"
+            if nonviolence_confidence < .80 and previous_prediction == "Violence":
+                predicted_class_name = "Violence"
+                previous_prediction = "Violence"
+            else:
+                predicted_class_name = "NonViolence"
+                previous_prediction = "NonViolence"
 
 
         #JUST 50% PREDICTION
