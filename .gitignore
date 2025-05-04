@@ -5,3 +5,5 @@ data/*
 __pycache__
 __pycache__/
 *.pyc
+code/LSTMcnn_live_detection/model_3dcnn.h5
+.DS_Store
