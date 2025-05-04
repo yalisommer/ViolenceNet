@@ -9,7 +9,7 @@ from keras.models import load_model
 SEQUENCE_LENGTH = 16  # Set according to how your model was trained
 IMAGE_HEIGHT, IMAGE_WIDTH = 64, 64  # Match your model input shape
 CLASSES_LIST = ["NonViolence", "Violence"]  # Replace with your actual class names
-MODEL_PATH = 'model_3dcnn9394.h5'  # Path to your saved .h5 model
+MODEL_PATH = 'model_3dcnn.h5'  # Path to your saved .h5 model
 
 # === Load the trained model ===
 MoBiLSTM_model = load_model(MODEL_PATH)
@@ -45,8 +45,17 @@ while True:
         nonviolence_confidence = predicted_probs[0]
         violence_confidence = predicted_probs[1]
         print(predicted_probs)
-        predicted_label = np.argmax(predicted_probs)
-        predicted_class_name = CLASSES_LIST[predicted_label]
+
+        #THRESHOLDING
+        if nonviolence_confidence < .85:
+            predicted_class_name = "Violence"
+        else:
+            predicted_class_name = "NonViolence"
+
+
+        #JUST 50% PREDICTION
+        # predicted_label = np.argmax(predicted_probs)
+        # predicted_class_name = CLASSES_LIST[predicted_label]
 
     # Overlay prediction on the frame
     color = (0, 255, 0) if predicted_class_name != "Violence" else (0, 0, 255)
