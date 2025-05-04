@@ -22,6 +22,9 @@ frames_queue = deque(maxlen=SEQUENCE_LENGTH)
 
 predicted_class_name = ''
 
+nonviolence_confidence = 0
+violence_confidence = 0
+
 while True:
     ok, frame = video_reader.read()
     print("reading frame")
@@ -39,6 +42,8 @@ while True:
     if len(frames_queue) == SEQUENCE_LENGTH:
         print("\nGot enough frames, now predicting.\n")
         predicted_probs = MoBiLSTM_model.predict(np.expand_dims(frames_queue, axis=0), verbose=0)[0]
+        nonviolence_confidence = predicted_probs[0]
+        violence_confidence = predicted_probs[1]
         print(predicted_probs)
         predicted_label = np.argmax(predicted_probs)
         predicted_class_name = CLASSES_LIST[predicted_label]
@@ -46,6 +51,10 @@ while True:
     # Overlay prediction on the frame
     color = (0, 255, 0) if predicted_class_name != "Violence" else (0, 0, 255)
     cv2.putText(frame, predicted_class_name, (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 2, color, 5)
+
+    cv2.putText(frame, "nonviolence confidence: " + str(nonviolence_confidence), (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 5)
+    cv2.putText(frame, "violence confidence: " + str(violence_confidence), (10, 300), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 5)
+
 
     # Show the frame
     cv2.imshow('Live Prediction', frame)
