@@ -9,7 +9,7 @@ from keras.models import load_model
 SEQUENCE_LENGTH = 16  # Set according to how your model was trained
 IMAGE_HEIGHT, IMAGE_WIDTH = 64, 64  # Match your model input shape
 CLASSES_LIST = ["NonViolence", "Violence"]  # Replace with your actual class names
-MODEL_PATH = 'model_3dcnn.h5'  # Path to your saved .h5 model
+MODEL_PATH = 'model_3dcnn9394.h5'  # Path to your saved .h5 model
 
 # === Load the trained model ===
 MoBiLSTM_model = load_model(MODEL_PATH)
@@ -25,7 +25,12 @@ previous_prediction = ''
 
 nonviolence_confidence = 0
 violence_confidence = 0
-frame_count = 0
+# frame_count = 0
+
+nonviolence_predictions_queue = deque(maxlen=8)
+
+for i in range(8):
+    nonviolence_predictions_queue.append(1)
 
 
 while True:
@@ -34,7 +39,7 @@ while True:
     if not ok:
         break
 
-    frame_count += 1
+    # frame_count += 1
     
     # Resize and normalize the frame
     resized_frame = cv2.resize(frame, (IMAGE_HEIGHT, IMAGE_WIDTH))
@@ -51,21 +56,28 @@ while True:
         violence_confidence = predicted_probs[1]
         print(predicted_probs)
 
+        nonviolence_predictions_queue.append(nonviolence_confidence)
+
         #THRESHOLDING + has to be two frames in a row 
-        if frame_count < 2:
-            if nonviolence_confidence < .80:
-                predicted_class_name = "Violence"
-                previous_prediction = "Violence"
-            else:
-                predicted_class_name = "NonViolence"
-                previous_prediction = "NonViolence"
+        if nonviolence_predictions_queue[-1] < .80 and nonviolence_predictions_queue[-2] < .80:
+            predicted_class_name = "Violence"
         else:
-            if nonviolence_confidence < .80 and previous_prediction == "Violence":
-                predicted_class_name = "Violence"
-                previous_prediction = "Violence"
-            else:
-                predicted_class_name = "NonViolence"
-                previous_prediction = "NonViolence"
+            predicted_class_name = "NonViolence"
+
+        # if frame_count < 2:
+        #     if nonviolence_confidence < .80:
+        #         predicted_class_name = "Violence"
+        #         previous_prediction = "Violence"
+        #     else:
+        #         predicted_class_name = "NonViolence"
+        #         previous_prediction = "NonViolence"
+        # else:
+        #     if nonviolence_confidence < .80 and previous_prediction == "Violence":
+        #         predicted_class_name = "Violence"
+        #         previous_prediction = "Violence"
+        #     else:
+        #         predicted_class_name = "NonViolence"
+        #         previous_prediction = "NonViolence"
 
 
         #JUST 50% PREDICTION
