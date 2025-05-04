@@ -59,7 +59,10 @@ while True:
         nonviolence_predictions_queue.append(nonviolence_confidence)
 
         #THRESHOLDING + has to be two frames in a row 
-        if nonviolence_predictions_queue[-1] < .80 and nonviolence_predictions_queue[-2] < .80:
+
+        # CONSIDER: A score based system. think about factors such as highest violence score achieved, change in violence score,
+        # averages of last frames, etc.
+        if (nonviolence_predictions_queue[-1] < .92 and nonviolence_predictions_queue[-2] < .92) or nonviolence_predictions_queue[-1] < .6:
             predicted_class_name = "Violence"
         else:
             predicted_class_name = "NonViolence"
