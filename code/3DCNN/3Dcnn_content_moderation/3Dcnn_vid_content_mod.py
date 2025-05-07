@@ -3,17 +3,15 @@ import numpy as np
 from collections import deque
 from keras.models import load_model
 
-
-#MAKE SURE TO RUN FROM THE LSTMcnn_content_moderation
-
+import os
 
 # === CONFIGURABLE PARAMETERS ===
-SEQUENCE_LENGTH = 16  # Set according to how your model was trained
-IMAGE_HEIGHT, IMAGE_WIDTH = 64, 64  # Match your model input shape
-CLASSES_LIST = ["NonViolence", "Violence"]  # Replace with your actual class names
-MODEL_PATH = 'MoBiLSTM_model.h5'  # Path to your saved .h5 model
+SEQUENCE_LENGTH = 16  
+IMAGE_HEIGHT, IMAGE_WIDTH = 64, 64  
+CLASSES_LIST = ["NonViolence", "Violence"]  
+MODEL_PATH = 'model_3dcnn_global_.94.h5'  
 
-MoBiLSTM_model = load_model(MODEL_PATH)
+cnn_model = load_model(MODEL_PATH)
 
 def predict_frames(video_file_path, output_file_path, SEQUENCE_LENGTH):
 
@@ -58,7 +56,7 @@ def predict_frames(video_file_path, output_file_path, SEQUENCE_LENGTH):
         if len(frames_queue) == SEQUENCE_LENGTH:
 
             # Pass the normalized frames to the model and get the predicted probabilities.
-            predicted_labels_probabilities = MoBiLSTM_model.predict(np.expand_dims(frames_queue, axis = 0))[0]
+            predicted_labels_probabilities = cnn_model.predict(np.expand_dims(frames_queue, axis = 0))[0]
             print("made a prediction")
 
             nv_prob = predicted_labels_probabilities[0]
@@ -128,7 +126,7 @@ def predict_video(video_file_path, SEQUENCE_LENGTH):
         frames_list.append(normalized_frame)
 
     # Passing the  pre-processed frames to the model and get the predicted probabilities.
-    predicted_labels_probabilities = MoBiLSTM_model.predict(np.expand_dims(frames_list, axis = 0))[0]
+    predicted_labels_probabilities = cnn_model.predict(np.expand_dims(frames_list, axis = 0))[0]
 
     # Get the index of class with highest probability.
     predicted_label = np.argmax(predicted_labels_probabilities)
@@ -142,11 +140,18 @@ def predict_video(video_file_path, SEQUENCE_LENGTH):
     video_reader.release()
 
 # Specifying video to be predicted
-input_video_file_path = "Input_videos/yali_daniel_fight.mp4"
+input_video_file_path = "Input_videos/yt_clip1.mp4"
 
 # Perform Prediction on the Test Video.
-predict_frames(input_video_file_path, "Output_videos/dali_test_cons_vid.mp4", SEQUENCE_LENGTH)
+# predict_frames(input_video_file_path, "Output_videos/dali_test_cons_vid.mp4", SEQUENCE_LENGTH)
 
 predict_video(input_video_file_path, SEQUENCE_LENGTH)
 
-print("done! Check out your new video")
+# input_dir = "Input_videos"
+
+# #predicts videos in the Input_videos directory depending on the endswith and startswith args below
+# for filename in os.listdir(input_dir):
+#    if filename.endswith(".mp4") and filename.startswith("control"): 
+#        input_path = os.path.join(input_dir, filename)
+#        print(f"Processing: {input_path}")
+#        predict_video(input_path, SEQUENCE_LENGTH)
