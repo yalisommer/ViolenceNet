@@ -1,4 +1,4 @@
-Fine tuning resnet, achieved 93% accuracy.
+Fine tuning resnet, achieved 93% validation accuracy.
 
 In google drive: your.e045-acc0.9332.weights.h5
 

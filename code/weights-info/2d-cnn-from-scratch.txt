@@ -1,4 +1,4 @@
-Model architecture written and trained from scratch, achieved 91.5% accuracy
+Model architecture written and trained from scratch, achieved 91.5% validationaccuracy
 
 In google drive:
 
