@@ -1,7 +1,8 @@
-# ViolenceNet-Darpli
+# ViolenceNet-Darpli: Harper Austin, Yali Sommer, Daniel Schiffman
 
-Three boys and a violent dream.
+With this project, we explore the use of convolutional neural networks (CNNs) to solve abstract classification problems. Specifically, we tackle the problem of violence detection (in the context of person-to-person interactions such as street fights). Despite being a binary task (Violent or NonViolent), it is a nuanced task with noisy data, and the differences between ordinary, non-violent physical interactions and violent ones can at times be quite subtle, e.g. a hug and a wrestling attack can look quite similar. 
 
+We first attempt to solve the problem using a 2D CNN trained on frames of violent and non-violent videos. We train a 2D CNN from scratch and we finetune a CNN with ResNet features as a backbone. We then train a 3D CNN from scratch on violent and non-violent videos.
 
 # File Structure
 
@@ -42,27 +43,6 @@ ViolenceNet-Darpli/
     ├── models.py
     ├── preprocess.py
     ├── tensorboard_utils.py
-├── data/
-    ├── test
-        ├── NV
-            ├── frames...
-        ├── V
-            ├── frames...
-        ├── _classes.csv
-    ├── train
-        ├── NV
-            ├── frames...
-        ├── V
-            ├── frames...
-        ├── _classes.csv
-    ├── valid
-        ├── NV
-            ├── frames...
-        ├── V
-            ├── frames...
-        ├── _classes.csv
-    ├── README.dataset.txt
-    ├── README/roboflow.txt
 ├── yolo
     ├── train
     ├── train4
@@ -99,11 +79,14 @@ Lastly, make sure to run the 3Dcnn_vid_content_mod.py script from the /code/3DCN
 
 # Other Notes
 
-The data in the data directory is the image data used to train our 2D CNN. The dataset used to train our 3D CNN can be found here: https://www.kaggle.com/datasets/mohamedmustafa/real-life-violence-situations-dataset/data
+The dataset used to train our 2D CNNs can be found here: https://universe.roboflow.com/dinesh-nariani-rmnpr/violence-not_violence-ziv7b/dataset/2 . The reformat_data.py script can be used to reformat this dataset in order to use it with the 2D CNN training pipeline.
+
+The dataset used to train our 3D CNN can be found here: https://www.kaggle.com/datasets/mohamedmustafa/real-life-violence-situations-dataset/data
 
 We trained our 2D CNN models with the pipeline in this repository using remote computing resources.
 
 We trained our 3D CNN with this Google Colab Notebook: https://colab.research.google.com/drive/1n63T816Q0pUBHftbJZlTxpvLemJjN0_u#scrollTo=0MfR0tOPxlZl
+
 
 
 # Acknowledgements
