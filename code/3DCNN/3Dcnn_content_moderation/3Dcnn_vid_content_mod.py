@@ -140,18 +140,18 @@ def predict_video(video_file_path, SEQUENCE_LENGTH):
     video_reader.release()
 
 # Specifying video to be predicted
-input_video_file_path = "Input_videos/yt_clip1.mp4"
+# input_video_file_path = "Input_videos/yt_clip1.mp4"
 
 # Perform Prediction on the Test Video.
 # predict_frames(input_video_file_path, "Output_videos/dali_test_cons_vid.mp4", SEQUENCE_LENGTH)
 
-predict_video(input_video_file_path, SEQUENCE_LENGTH)
+# predict_video(input_video_file_path, SEQUENCE_LENGTH)
 
-# input_dir = "Input_videos"
+input_dir = "Input_videos"
 
-# #predicts videos in the Input_videos directory depending on the endswith and startswith args below
-# for filename in os.listdir(input_dir):
-#    if filename.endswith(".mp4") and filename.startswith("control"): 
-#        input_path = os.path.join(input_dir, filename)
-#        print(f"Processing: {input_path}")
-#        predict_video(input_path, SEQUENCE_LENGTH)
+#predicts videos in the Input_videos directory depending on the endswith and startswith args below
+for filename in os.listdir(input_dir):
+   if filename.endswith(".mp4") and filename.startswith("control_new"): 
+       input_path = os.path.join(input_dir, filename)
+       print(f"Processing: {input_path}")
+       predict_video(input_path, SEQUENCE_LENGTH)
