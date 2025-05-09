@@ -47,6 +47,21 @@ model.build()
 model.load_weights(MODEL_PATH)
 
 
+#RESNET BASED MODEL
+# input_shape = (224, 224, 3)
+# base_input = tf.keras.layers.Input(shape=input_shape)
+# resnet_base = tf.keras.applications.ResNet50(weights='imagenet', include_top=False, input_tensor=base_input)
+# x = resnet_base.output
+# x = tf.keras.layers.GlobalAveragePooling2D()(x)  # Converts (7, 7, 2048) to (2048,)
+# x = Dense(128, activation='relu')(x)
+# x = Dropout(0.5)(x)
+# output = Dense(2, activation='softmax')(x)
+
+# model = tf.keras.models.Model(inputs=base_input, outputs=output)
+
+# model.build()
+# model.load_weights(MODEL_PATH)
+
 #cnn_model = load_model(MODEL_PATH)
 
 true_positives = 0 #violence predicted as violence
@@ -120,7 +135,3 @@ recall = true_positives / (true_positives + false_negatives + 1e-7)
 print("testing accuracy is: " + str(testing_acc))
 print("precision: " + str(precision))
 print("recall: " + str(recall))
-
-
-
-
