@@ -9,7 +9,7 @@ import os
 SEQUENCE_LENGTH = 16  
 IMAGE_HEIGHT, IMAGE_WIDTH = 64, 64  
 CLASSES_LIST = ["NonViolence", "Violence"]  
-MODEL_PATH = 'model_3dcnn9394.h5'  
+MODEL_PATH = 'model-3dcnn9394.h5'  
 
 cnn_model = load_model(MODEL_PATH)
 
