@@ -84,67 +84,8 @@ def predict_frames(video_file_path, output_file_path, SEQUENCE_LENGTH):
     video_reader.release()
     video_writer.release()
 
-
-# def predict_video(video_file_path, SEQUENCE_LENGTH):
-
-#     video_reader = cv2.VideoCapture(video_file_path)
-
-#     # Get the width and height of the video.
-#     original_video_width = int(video_reader.get(cv2.CAP_PROP_FRAME_WIDTH))
-#     original_video_height = int(video_reader.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-#     # Declare a list to store video frames we will extract.
-#     frames_list = []
-
-#     # Store the predicted class in the video.
-#     predicted_class_name = ''
-
-#     # Get the number of frames in the video.
-#     video_frames_count = int(video_reader.get(cv2.CAP_PROP_FRAME_COUNT))
-
-#     # Calculate the interval after which frames will be added to the list.
-#     skip_frames_window = max(int(video_frames_count/SEQUENCE_LENGTH),1)
-
-#     # Iterating the number of times equal to the fixed length of sequence.
-#     for frame_counter in range(SEQUENCE_LENGTH):
-
-#         # Set the current frame position of the video.
-#         video_reader.set(cv2.CAP_PROP_POS_FRAMES, frame_counter * skip_frames_window)
-
-#         success, frame = video_reader.read()
-
-#         if not success:
-#             break
-
-#         # Resize the Frame to fixed Dimensions.
-#         resized_frame = cv2.resize(frame, (IMAGE_HEIGHT, IMAGE_WIDTH))
-
-#         # Normalize the resized frame.
-#         normalized_frame = resized_frame / 255
-
-#         # Appending the pre-processed frame into the frames list
-#         frames_list.append(normalized_frame)
-
-#     # Passing the  pre-processed frames to the model and get the predicted probabilities.
-#     predicted_labels_probabilities = cnn_model.predict(np.expand_dims(frames_list, axis = 0))[0]
-
-#     # Get the index of class with highest probability.
-#     predicted_label = np.argmax(predicted_labels_probabilities)
-
-#     # Get the class name using the retrieved index.
-#     predicted_class_name = CLASSES_LIST[predicted_label]
-
-#     # Display the predicted class along with the prediction confidence.
-#     print(f'Predicted: {predicted_class_name}\nConfidence: {predicted_labels_probabilities[predicted_label]}')
-
-#     video_reader.release()
-
-def new_predict_video(video_file_path, SEQUENCE_LENGTH):
+def predict_video(video_file_path, SEQUENCE_LENGTH):
     video_reader = cv2.VideoCapture(video_file_path)
-
-    # Get the width and height of the video.
-    original_video_width = int(video_reader.get(cv2.CAP_PROP_FRAME_WIDTH))
-    original_video_height = int(video_reader.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     frames_queue = deque(maxlen = SEQUENCE_LENGTH)
 
@@ -153,9 +94,6 @@ def new_predict_video(video_file_path, SEQUENCE_LENGTH):
 
     predicted_labels_and_confidences = []
     predicted_labels = []
-
-    # Get the number of frames in the video.
-    video_frames_count = int(video_reader.get(cv2.CAP_PROP_FRAME_COUNT))
 
     while video_reader.isOpened():
 
@@ -180,10 +118,6 @@ def new_predict_video(video_file_path, SEQUENCE_LENGTH):
             # Pass the normalized frames to the model and get the predicted probabilities.
             predicted_labels_probabilities = cnn_model.predict(np.expand_dims(frames_queue, axis = 0))[0]
 
-            nv_prob = predicted_labels_probabilities[0]
-            v_prob = predicted_labels_probabilities[1]
-
-
             # Get the index of class with highest probability.
             predicted_label = np.argmax(predicted_labels_probabilities)
 
@@ -203,7 +137,7 @@ def new_predict_video(video_file_path, SEQUENCE_LENGTH):
     predicted_labels_array = np.array(predicted_labels)
     unique_labels, counts = np.unique(predicted_labels_array, return_counts=True)
 
-    #threshold idea:
+    #thresholding at 50% (vote by majority) 
 
     #correction if only one label has been predicted
     if len(counts) == 1:
@@ -214,13 +148,10 @@ def new_predict_video(video_file_path, SEQUENCE_LENGTH):
 
 
     #thresholding
-    if counts[1]/(counts[0] + counts[1]) > .15:
+    if counts[1]/(counts[0] + counts[1]) > .5: #currently voting by majority of predictions can be changed
         final_prediction = "Violence" 
     else:
         final_prediction = "NonViolence"
-
-    #majority vote:
-    # final_prediction = unique_labels[np.argmax(counts)]
 
     confidences = []
     for pair in predicted_labels_and_confidences:
@@ -244,7 +175,7 @@ def new_predict_video(video_file_path, SEQUENCE_LENGTH):
 # Perform Prediction on the Test Video.
 # predict_frames(input_video_file_path, "Output_videos/dali_test_cons_vid.mp4", SEQUENCE_LENGTH)
 
-# new_predict_video(input_video_file_path, SEQUENCE_LENGTH)
+# predict_video(input_video_file_path, SEQUENCE_LENGTH)
 
 
 input_dir = "Input_videos"
@@ -254,44 +185,46 @@ def predict_violent_vids():
     num_correct = 0
     num_false_negatives = 0
     to_review = 0
+    review_threshold = .85
     for filename in os.listdir(input_dir):
         if filename.endswith(".mp4") and (filename.startswith("yt")): 
             input_path = os.path.join(input_dir, filename)
             print(f"Processing: {input_path}")
-            prediction, confidence = new_predict_video(input_path, SEQUENCE_LENGTH)
+            prediction, confidence = predict_video(input_path, SEQUENCE_LENGTH)
             if prediction == "Violence":
                 num_correct = num_correct + 1
             else:
                 num_false_negatives = num_false_negatives + 1
-                if confidence < .85:
+                if confidence < review_threshold:
                     to_review = to_review + 1
     print("Outcomes on 25 violent videos:")
     print("Accuracy over 25 violent videos: " + str((num_correct/25)))
     print("False negatives: " + str(num_false_negatives))
-    print("If threshold for nv confidence is .85 else review: " + str(to_review) + " to be reviewed")
+    print("If threshold for nv confidence is " + str(review_threshold) + " else review: " + str(to_review) + " to be reviewed")
     print("In this case: " + str(num_correct) + " correct, " + str((num_false_negatives - to_review)) + " incorrect, " + str(to_review) + " to be reviewed")
 
 def predict_nonviolent_vids():
     num_correct = 0
     num_false_positives = 0
     to_review = 0
+    review_threshold = .85
     for filename in os.listdir(input_dir):
         if filename.endswith(".mp4") and (filename.startswith("control")): 
             input_path = os.path.join(input_dir, filename)
             print(f"Processing: {input_path}")
-            prediction, confidence = new_predict_video(input_path, SEQUENCE_LENGTH)
+            prediction, confidence = predict_video(input_path, SEQUENCE_LENGTH)
             if prediction == "NonViolence":
                 num_correct = num_correct + 1
-                if confidence < .85:
+                if confidence < review_threshold:
                     to_review = to_review + 1
             else:
                 num_false_positives = num_false_positives + 1
     print("Outcomes on 25 nonviolent videos:")
     print("Accuracy over 25 nonviolent videos: " + str((num_correct/25)))
     print("False positives: " + str(num_false_positives))
-    print("If threshold for nv confidence is .85 else review: " + str(to_review) + " to be reviewed")
+    print("If threshold for nv confidence is " + str(review_threshold) + " else review: " + str(to_review) + " to be reviewed")
     print("In this case: " + str((num_correct - to_review)) + " correct, " + str(num_false_positives) + " incorrect, " + str(to_review) + " to be reviewed")
 
 
 predict_violent_vids()
-# predict_nonviolent_vids()
+predict_nonviolent_vids()

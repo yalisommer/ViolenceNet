@@ -1,9 +1,3 @@
-"""
-Homework 5 - CNNs
-CSCI1430 - Computer Vision
-Brown University
-"""
-
 import os
 import random
 import numpy as np
@@ -108,11 +102,7 @@ class Datasets():
         Returns:
             img - numpy array of shape (image size, image size, 3)
         """
-        
-
         img = (img - self.mean) / self.stddev      
-
-
         return img
 
     def preprocess_fn(self, img):
@@ -127,15 +117,8 @@ class Datasets():
 
     def custom_preprocess_fn(self, img):
         """ Custom preprocess function for ImageDataGenerator. """
-
-        if self.task == '3':
-            img = tf.keras.applications.vgg16.preprocess_input(img)
-        else:
             img = img / 255.
             img = self.standardize(img)
-
-    
-
         if random.random() < 0.3:
             img = img + tf.random.uniform(
                 (hp.img_size, hp.img_size, 1),
@@ -151,8 +134,6 @@ class Datasets():
         Arguments:
             path - Filepath of the data being imported, such as
                    "../data/train" or "../data/test"
-            is_vgg - Boolean value indicating whether VGG preprocessing
-                     should be applied to the images.
             shuffle - Boolean value indicating whether the data should
                       be randomly shuffled.
             augment - Boolean value indicating whether the data should
@@ -163,20 +144,16 @@ class Datasets():
         """
 
         if augment:
-            
-
             data_gen = tf.keras.preprocessing.image.ImageDataGenerator(
                 preprocessing_function=self.preprocess_fn,
             )
 
             # ============================================================
         else:
-            # Don't modify this
             data_gen = tf.keras.preprocessing.image.ImageDataGenerator(
                 preprocessing_function=self.preprocess_fn)
 
-        # VGG must take images of size 224x224
-        img_size = 224 if is_vgg else hp.img_size
+        img_size = hp.img_size
 
         classes_for_flow = None
 

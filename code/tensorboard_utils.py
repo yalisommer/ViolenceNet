@@ -1,9 +1,3 @@
-"""
-Homework 5 - CNNs
-CSCI1430 - Computer Vision
-Brown University
-"""
-
 import io
 import os
 import re

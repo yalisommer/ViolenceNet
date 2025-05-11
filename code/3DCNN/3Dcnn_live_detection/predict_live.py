@@ -23,7 +23,6 @@ previous_prediction = ''
 
 nonviolence_confidence = 0
 violence_confidence = 0
-# frame_count = 0
 
 nonviolence_predictions_queue = deque(maxlen=8)
 

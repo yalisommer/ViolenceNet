@@ -29,6 +29,22 @@ model = Sequential([
 model.build()
 model.load_weights('your.e016-acc0.9152.weights.h5') #this path can be changed to whatever weights 
 
+#RESNET BASED MODEL
+# input_shape = (224, 224, 3)
+# base_input = tf.keras.layers.Input(shape=input_shape)
+# resnet_base = tf.keras.applications.ResNet50(weights='imagenet', include_top=False, input_tensor=base_input)
+# x = resnet_base.output
+# x = tf.keras.layers.GlobalAveragePooling2D()(x)  # Converts (7, 7, 2048) to (2048,)
+# x = Dense(128, activation='relu')(x)
+# x = Dropout(0.5)(x)
+# output = Dense(2, activation='softmax')(x)
+
+# model = tf.keras.models.Model(inputs=base_input, outputs=output)
+
+# model.build()
+# model.load_weights('your.e045-acc0.9332.weights.h5')
+
+
 datasets = Datasets('../../data', 1)
 
 #helper method to preprocess images in the same way we did for training

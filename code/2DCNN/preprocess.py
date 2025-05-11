@@ -1,9 +1,3 @@
-"""
-Homework 5 - CNNs
-CSCI1430 - Computer Vision
-Brown University
-"""
-
 import os
 import random
 import numpy as np
@@ -81,27 +75,6 @@ class Datasets():
 
             data_sample[i] = img
 
-        # TASK 1
-        # TODO: Calculate the mean and standard deviation
-        #       of the samples in data_sample and store them in
-        #       self.mean and self.stddev respectively.
-        #
-        #       Note: This is _not_ a mean over all pixels;
-        #             it is a mean image (the mean input data point).
-        #       
-        #             For example, the mean of the two images:
-        #
-        #             [[[0, 0, 100], [0, 0, 100]],      [[[100, 0, 0], [100, 0, 0]],
-        #              [[0, 100, 0], [0, 100, 0]],  and  [[0, 100, 0], [0, 100, 0]],
-        #              [[100, 0, 0], [100, 0, 0]]]       [[0, 0, 100], [0, 0, 100]]]
-        #
-        #             would be
-        #
-        #             [[[50, 0, 50], [50, 0, 50]],
-        #              [[0, 100, 0], [0, 100, 0]],
-        #              [[50, 0, 50], [50, 0, 50]]]
-        #
-        # ==========================================================
 
         self.mean = np.mean(data_sample, axis=0)
         self.stddev = np.std(data_sample, axis=0)
@@ -130,46 +103,20 @@ class Datasets():
             img - numpy array of shape (image size, image size, 3)
         """
 
-        # TASK 1
-        # TODO: Standardize the input image. Use self.mean and self.stddev
-        #       that were calculated in calc_mean_and_stddev() to perform
-        #       the standardization.
-        # =============================================================
-
-        img = (img - self.mean) / self.stddev      # replace this code
-
-        # =============================================================
+        img = (img - self.mean) / self.stddev     
 
         return img
 
     def preprocess_fn(self, img):
         """ Preprocess function for ImageDataGenerator. """
-
-        if self.task == '3':
-            img = tf.keras.applications.vgg16.preprocess_input(img)
-        else:
-            img = img / 255.
-            img = self.standardize(img)
+        img = img / 255.
+        img = self.standardize(img)
         return img
 
     def custom_preprocess_fn(self, img):
-        """ Custom preprocess function for ImageDataGenerator. """
-
-        if self.task == '3':
-            img = tf.keras.applications.vgg16.preprocess_input(img)
-        else:
-            img = img / 255.
-            img = self.standardize(img)
-
-        # EXTRA CREDIT: 
-        # Write your own custom data augmentation procedure, creating
-        # an effect that cannot be achieved using the arguments of
-        # ImageDataGenerator. This can potentially boost your accuracy
-        # in the validation set. Note that this augmentation should
-        # only be applied to some input images, so make use of the
-        # 'random' module to make sure this happens. Also, make sure
-        # that ImageDataGenerator uses *this* function for preprocessing
-        # on augmented data.
+        """ Custom preprocess function for ImageDataGenerator. """    
+        img = img / 255.
+        img = self.standardize(img)
 
         if random.random() < 0.3:
             img = img + tf.random.uniform(
@@ -186,8 +133,6 @@ class Datasets():
         Arguments:
             path - Filepath of the data being imported, such as
                    "../data/train" or "../data/test"
-            is_vgg - Boolean value indicating whether VGG preprocessing
-                     should be applied to the images.
             shuffle - Boolean value indicating whether the data should
                       be randomly shuffled.
             augment - Boolean value indicating whether the data should
@@ -198,34 +143,16 @@ class Datasets():
         """
 
         if augment:
-            # TODO: Use the arguments of ImageDataGenerator()
-            #       to augment the data. Leave the
-            #       preprocessing_function argument as is unless
-            #       you have written your own custom preprocessing
-            #       function (see custom_preprocess_fn()).
-            #
-            # Documentation for ImageDataGenerator: https://bit.ly/2wN2EmK
-            #
-            # ============================================================
-
             data_gen = tf.keras.preprocessing.image.ImageDataGenerator(
                 preprocessing_function=self.preprocess_fn,
-                #rotation_range=5, # likely by degrees, can be much larger than .1 (could be like 3)
-                #width_shift_range=0.15,
-                #height_shift_range=0.15,
-                #zoom_range=0.2, # some things like zoom may matter more, decr range
-                #shear_range=0.2,
-                #channel_shift_range=40 # some things like color may matter less, incr
             )
 
-            # ============================================================
         else:
             # Don't modify this
             data_gen = tf.keras.preprocessing.image.ImageDataGenerator(
                 preprocessing_function=self.preprocess_fn)
 
-        # VGG must take images of size 224x224
-        img_size = 224 if is_vgg else hp.img_size
+        img_size = hp.img_size
 
         classes_for_flow = None
 
