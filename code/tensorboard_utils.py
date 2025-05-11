@@ -57,20 +57,9 @@ class ImageLabelingLogger(tf.keras.callbacks.Callback):
                 probabilities = self.model(np.array([image])).numpy()[0]
                 predict_class_idx = np.argmax(probabilities)
 
-                if self.task == '1' or self.task == '2':
+                if self.task == '1':
                     image = np.clip(image, 0., 1.)
                     plt.imshow(image, cmap='gray')
-                else:
-                    # Undo VGG preprocessing
-                    mean = [103.939, 116.779, 123.68]
-                    image[..., 0] += mean[0]
-                    image[..., 1] += mean[1]
-                    image[..., 2] += mean[2]
-                    image = image[:, :, ::-1]
-                    image = image / 255.
-                    image = np.clip(image, 0., 1.)
-
-                    plt.imshow(image)
 
                 is_correct = correct_class_idx == predict_class_idx
 
@@ -225,17 +214,7 @@ class CustomModelSaver(tf.keras.callbacks.Callback):
                        "maximum TEST accuracy.\nSaving checkpoint at {location}")
                        .format(epoch + 1, cur_acc, location = save_location))
                 self.model.save_weights(save_location)
-                self.model.save(model_save_location) # RIGHT NOW SAVING BOTH, THIS IS AN EXPENSIVE COMPUTATION, WE SHOULD CHANGE IN FUTURE
-            elif self.task == '3':
-                save_location = self.checkpoint_dir + os.sep + "vgg." + save_name
-                print(("\nEpoch {0:03d} TEST accuracy ({1:.4f}) EXCEEDED previous "
-                       "maximum TEST accuracy.\nSaving checkpoint at {location}")
-                       .format(epoch + 1, cur_acc, location = save_location))
-                # Only save weights of classification head of VGGModel
-                self.model.head.save_weights(save_location)
 
-            # Ensure max_num_weights is not exceeded by removing
-            # minimum weight
             if self.max_num_weights > 0 and \
                     num_weights + 1 > self.max_num_weights:
                 os.remove(self.checkpoint_dir + os.sep + min_acc_file)

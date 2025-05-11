@@ -9,9 +9,9 @@ from ultralytics import YOLO
 SEQUENCE_LENGTH = 16
 IMAGE_HEIGHT, IMAGE_WIDTH = 64, 64
 CLASSES_LIST = ["NonViolence", "Violence"]
-CNN_MODEL_PATH = 'model_3dcnn_global_.94.h5'
-YOLO_MODEL_PATH = '../../yolo/my_model2.pt'
-YOLO_CONFIDENCE_THRESHOLD = 0.6
+CNN_MODEL_PATH = '../model_3dcnn_global_.94.h5'
+YOLO_MODEL_PATH = '../../../yolo/my_model2.pt'
+YOLO_CONFIDENCE_THRESHOLD = 0.75
 FPS_SMOOTHING = 10
 
 # === Load Models ===
@@ -78,7 +78,7 @@ while True:
         violence_confidence = prediction[1]
         violence_score_queue.append(nonviolence_confidence)
 
-        if (violence_score_queue[-1] < 0.92 and violence_score_queue[-2] < 0.92) or violence_score_queue[-1] < 0.6:
+        if (violence_score_queue[-1] < 0.88 and violence_score_queue[-2] < 0.88 and violence_score_queue[-3] < 0.88) or violence_score_queue[-1] < 0.6:
             predicted_class_name = "Violence"
             cv2.putText(
                 display_frame,
