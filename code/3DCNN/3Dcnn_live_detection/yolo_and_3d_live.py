@@ -9,7 +9,7 @@ from ultralytics import YOLO
 SEQUENCE_LENGTH = 16
 IMAGE_HEIGHT, IMAGE_WIDTH = 64, 64
 CLASSES_LIST = ["NonViolence", "Violence"]
-CNN_MODEL_PATH = '../model_3dcnn_global_.94.h5'
+CNN_MODEL_PATH = 'model_3dcnn_global_.94.h5'
 YOLO_MODEL_PATH = '../../../yolo/my_model2.pt'
 YOLO_CONFIDENCE_THRESHOLD = 0.75
 FPS_SMOOTHING = 10

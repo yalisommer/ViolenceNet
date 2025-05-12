@@ -27,7 +27,8 @@ model = Sequential([
               Dense(2, activation='softmax')
         ])
 model.build()
-model.load_weights('your.e016-acc0.9152.weights.h5') #this path can be changed to whatever weights 
+model.load_weights('your.e016-acc0.9152.weights.h5') #this path can be changed to whatever weights but architecture must be
+#changed accordingly
 
 #RESNET BASED MODEL
 # input_shape = (224, 224, 3)
@@ -43,7 +44,6 @@ model.load_weights('your.e016-acc0.9152.weights.h5') #this path can be changed t
 
 # model.build()
 # model.load_weights('your.e045-acc0.9332.weights.h5')
-
 
 datasets = Datasets('../../data', 1)
 
@@ -91,5 +91,3 @@ while video_feed.isOpened():
     frame_idx += 1
 
 video_feed.release()
-
-

@@ -7,6 +7,7 @@ from keras.layers import \
 from preprocess import Datasets
 from skimage.transform import resize
 
+#This is our most successful 2D CNN (trained from scratch)
 model = Sequential([
               Conv2D(32, 3, 1, activation='relu', padding='same'),
               BatchNormalization(),
@@ -27,6 +28,7 @@ model = Sequential([
         ])
 model.build()
 model.load_weights('your.e016-acc0.9152.weights.h5') #this path can be changed to whatever weights 
+#but the architecture must be changed accordingly
 
 #RESNET BASED MODEL
 # input_shape = (224, 224, 3)
