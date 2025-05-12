@@ -56,7 +56,7 @@ ViolenceNet/
 ├── reformat_data.py
  </pre>
 
-Note: any aspects of the file structure that are not present (checkpoints/, logs/, code/3DCNN/3Dcnn_content_moderation/Output_videos) would be populated if the respective code is run.
+Note: Please add the Input_videos/ directory where indicated above. Any other aspects of the file structure that are not present (checkpoints/, logs/, code/3DCNN/3Dcnn_content_moderation/Output_videos) would be populated if the respective code is run.
 
 # Information and Instructions
 
